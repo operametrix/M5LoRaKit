@@ -36,6 +36,13 @@
 #include <hal/hal.h>
 #include <SPI.h>
 
+#define BLUE_BUTTON_PIN 13
+#define RED_BUTTON_PIN 14
+#define DEBOUNCE_MS 10
+
+Button RedButton = Button(RED_BUTTON_PIN, true, DEBOUNCE_MS);
+Button BlueButton = Button(BLUE_BUTTON_PIN, true, DEBOUNCE_MS);
+
 // This EUI must be in little-endian format, so least-significant-byte
 // first. When copying an EUI from ttnctl output, this means to reverse
 // the bytes. For TTN issued EUIs the last bytes should be 0xD5, 0xB3,
@@ -223,5 +230,12 @@ void setup() {
 }
 
 void loop() {
+    M5.update();
+    if (RedButton.wasPressed()) {
+        Serial.println("Red button pressed");
+    }
+    if (BlueButton.wasPressed()) {
+        Serial.println("Blue button pressed");
+    }
     os_runloop_once();
 }
