@@ -36,6 +36,11 @@
 #include <hal/hal.h>
 #include <SPI.h>
 
+#define VIBRATOR_PIN 32
+#define VIBRATOR_PWM_FREQ 10000
+#define VIBRATOR_PWM_CHANNEL 0
+#define VIBRATOR_PWM_RESOLUTION 10
+
 #define BLUE_BUTTON_PIN 13
 #define RED_BUTTON_PIN 14
 #define DEBOUNCE_MS 10
@@ -216,11 +221,23 @@ void onEvent (ev_t ev) {
     }
 }
 
+void vibratorSetup() {
+    ledcSetup(VIBRATOR_PWM_CHANNEL, VIBRATOR_PWM_FREQ, VIBRATOR_PWM_RESOLUTION);
+    ledcAttachPin(VIBRATOR_PIN, VIBRATOR_PWM_CHANNEL);
+}
+
+void vibratorSet(uint32_t duty) {
+    ledcWrite(VIBRATOR_PWM_CHANNEL, duty);
+}
 
 void setup() {
     M5.begin();
 
+    vibratorSetup();
+    vibratorSet(0);
+
     // LMIC init
+
     os_init();
     // Reset the MAC state. Session and pending data transfers will be discarded.
     LMIC_reset();
@@ -233,9 +250,11 @@ void loop() {
     M5.update();
     if (RedButton.wasPressed()) {
         Serial.println("Red button pressed");
+        vibratorSet(0);
     }
     if (BlueButton.wasPressed()) {
         Serial.println("Blue button pressed");
+        vibratorSet(512);
     }
     os_runloop_once();
 }
