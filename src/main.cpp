@@ -36,6 +36,7 @@
 #include <hal/hal.h>
 #include <SPI.h>
 
+#define VIBRATOR
 #define VIBRATOR_PIN 32
 #define VIBRATOR_PWM_FREQ 10000
 #define VIBRATOR_PWM_CHANNEL 0
@@ -233,9 +234,10 @@ void vibratorSet(uint32_t duty) {
 void setup() {
     M5.begin();
 
+#ifdef VIBRATOR
     vibratorSetup();
     vibratorSet(0);
-
+#endif
     // LMIC init
 
     os_init();
@@ -250,11 +252,15 @@ void loop() {
     M5.update();
     if (RedButton.wasPressed()) {
         Serial.println("Red button pressed");
+#ifdef VIBRATOR
         vibratorSet(0);
+#endif
     }
     if (BlueButton.wasPressed()) {
         Serial.println("Blue button pressed");
+#ifdef VIBRATOR
         vibratorSet(512);
+#endif
     }
     os_runloop_once();
 }
