@@ -42,6 +42,7 @@
 #define VIBRATOR_PWM_CHANNEL 0
 #define VIBRATOR_PWM_RESOLUTION 10
 
+#define INTERNAL_BUTTON
 #define EXTERNAL_BUTTON
 #define BLUE_BUTTON_PIN 13
 #define RED_BUTTON_PIN 14
@@ -251,6 +252,22 @@ void setup() {
 
 void loop() {
     M5.update();
+    #ifdef INTERNAL_BUTTON
+	if (M5.BtnA.wasPressed())
+	{
+		Serial.println("A button pressed");
+		#ifdef VIBRATOR
+		vibratorSet(0);
+		#endif
+	}
+	if (M5.BtnC.wasPressed())
+	{
+		Serial.println("C Button pressed");
+		#ifdef VIBRATOR
+		vibratorSet(512);
+		#endif
+	}
+    #endif
     #ifdef EXTERNAL_BUTTON
     if (RedButton.wasPressed())
     {
