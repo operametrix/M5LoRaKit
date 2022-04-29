@@ -35,6 +35,7 @@
 #include <lmic.h>
 #include <hal/hal.h>
 #include <SPI.h>
+#include "UNIT_ENV.h"
 
 #define VIBRATOR
 #define VIBRATOR_PIN 32
@@ -50,6 +51,9 @@
 
 Button RedButton = Button(RED_BUTTON_PIN, true, DEBOUNCE_MS);
 Button BlueButton = Button(BLUE_BUTTON_PIN, true, DEBOUNCE_MS);
+
+SHT3X sht30;
+QMP6988 qmp6988;
 
 // This EUI must be in little-endian format, so least-significant-byte
 // first. When copying an EUI from ttnctl output, this means to reverse
@@ -248,9 +252,20 @@ void setup() {
 
     // Start job (sending automatically starts OTAA too)
     do_send(&sendjob);
+    
+    Wire.begin();
+    qmp6988.init();
 }
 
+float tmp = 0.0;
+float hum = 0.0;
+float pressure = 0.0;
+
+unsigned long ts;
+unsigned long last_update;
+
 void loop() {
+    ts = millis();
     M5.update();
     #ifdef INTERNAL_BUTTON
 	if (M5.BtnA.wasPressed())
@@ -284,5 +299,20 @@ void loop() {
 	#endif
     }
     #endif
+
+    if (ts > last_update + 2000)
+    {
+	last_update = ts;
+	pressure = qmp6988.calcPressure();
+	if(sht30.get()==0)
+	{
+	    tmp = sht30.cTemp;
+	    hum = sht30.humidity;
+	}else
+	{
+	    tmp=0,hum=0;
+	}
+     }
+
     os_runloop_once();
 }
