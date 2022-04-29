@@ -261,6 +261,7 @@ void setup() {
     delay(500);
     M5.Lcd.clear();
 }
+int vibrator = 500;
 
 float tmp = 0.0;
 float hum = 0.0;
@@ -277,6 +278,18 @@ void loop() {
 	{
 		Serial.println("A button pressed");
 		#ifdef VIBRATOR
+		if (vibrator >=20)
+		{
+			vibrator -= 20;
+			vibratorSet(vibrator);
+		}
+		#endif
+	}
+	if (M5.BtnB.wasPressed())
+	{
+		Serial.println("B Button pressed");
+		#ifdef VIBRATOR
+		vibrator = 500;
 		vibratorSet(0);
 		#endif
 	}
@@ -284,7 +297,11 @@ void loop() {
 	{
 		Serial.println("C Button pressed");
 		#ifdef VIBRATOR
-		vibratorSet(512);
+		if (vibrator <=980)
+		{
+			vibrator += 20;
+			vibratorSet(vibrator);
+		}
 		#endif
 	}
     #endif
