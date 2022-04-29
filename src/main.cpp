@@ -238,7 +238,7 @@ void vibratorSet(uint32_t duty) {
 }
 
 void setup() {
-    M5.begin();
+    M5.begin(true, false, true, false);
 
 #ifdef VIBRATOR
     vibratorSetup();
@@ -253,7 +253,7 @@ void setup() {
     // Start job (sending automatically starts OTAA too)
     do_send(&sendjob);
     
-    Wire.begin();
+    Wire.begin(14,13);
     qmp6988.init();
 }
 
