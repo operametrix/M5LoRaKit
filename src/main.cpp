@@ -37,6 +37,8 @@
 #include <SPI.h>
 #include "UNIT_ENV.h"
 #include "opm.h"
+#include "plus.h"
+#include "minus.h"
 
 #define VIBRATOR
 #define VIBRATOR_PIN 32
@@ -334,6 +336,15 @@ void loop() {
 	{
 	    tmp=0,hum=0;
 	}
+	M5.Lcd.drawJpg(minus,sizeof(minus),38,210,0,0,0,0,JPEG_DIV_8);
+
+	M5.Lcd.drawJpg(plus,sizeof(plus),250,210,0,0,0,0,JPEG_DIV_8);
+
+	M5.Lcd.fillRoundRect(128,210,60,28,3,DARKGREY);
+	M5.Lcd.fillRoundRect(0,0,320,180,3,BLACK);
+
+	M5.Lcd.setTextColor(WHITE);
+	M5.Lcd.drawCentreString("STOP",160,215,2);
 
 	M5.Lcd.drawString(F("TEMPERATURE"),30,30,2);
 	M5.Lcd.drawString(F("°C"),250,20,2);
