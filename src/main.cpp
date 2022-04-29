@@ -36,6 +36,7 @@
 #include <hal/hal.h>
 #include <SPI.h>
 #include "UNIT_ENV.h"
+#include "opm.h"
 
 #define VIBRATOR
 #define VIBRATOR_PIN 32
@@ -255,6 +256,10 @@ void setup() {
     
     Wire.begin(14,13);
     qmp6988.init();
+
+    M5.Lcd.drawJpg(opm,sizeof(opm),75,30);
+    delay(500);
+    M5.Lcd.clear();
 }
 
 float tmp = 0.0;
